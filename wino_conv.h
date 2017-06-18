@@ -92,12 +92,12 @@ typedef struct
 #define fc_out_ch 2
 
 
-#pragma SDS data copy(input[0 : local_in_h * local_in_w * local_in_ch/(nnup_fac*nnup_fac*4)], bias[0 : local_out_ch/4], output[0 : local_out_h * local_out_w * local_out_ch/4], kernel[0 :k_num * 3 * 3 * local_in_ch * local_out_ch/4])///fix
+#pragma SDS data copy(input[0 : local_in_h * local_in_w * local_in_ch/(nnup_fac*nnup_fac*4)], bias[0 : local_out_h * local_out_w * local_out_ch/4], output[0 : local_out_h * local_out_w * local_out_ch/4], kernel[0 :k_num * 3 * 3 * local_in_ch * local_out_ch/4])///fix
 #pragma SDS data access_pattern(input:SEQUENTIAL, bias:SEQUENTIAL, kernel:SEQUENTIAL, output:SEQUENTIAL)
 #pragma SDS data sys_port(input:AFI, bias:AFI, output:AFI, kernel:AFI)
-#pragma SDS data data_mover(input:AXIDMA_SIMPLE, bias:AXIFIFO, output:AXIDMA_SIMPLE, kernel:AXIDMA_SIMPLE)
+#pragma SDS data data_mover(input:AXIDMA_SIMPLE, bias:AXIDMA_SIMPLE, output:AXIDMA_SIMPLE, kernel:AXIDMA_SIMPLE)
 #pragma SDS data mem_attribute(input:NON_CACHEABLE, bias:NON_CACHEABLE, output:NON_CACHEABLE, kernel:NON_CACHEABLE)
-void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_ch/4], quad_tf output[out_h*out_w*out_ch/4], quad_tw kernel[3 * 3 * out_ch * in_ch / 4], int local_in_h, int local_in_w, int local_out_h, int local_out_w, int local_in_ch, int local_out_ch, int local_k_sz, int stride, bool R, int nnup_fac, int k_num, int if_4);
+void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_h*out_w*out_ch/4], quad_tf output[out_h*out_w*out_ch/4], quad_tw kernel[3 * 3 * out_ch * in_ch / 4], int local_in_h, int local_in_w, int local_out_h, int local_out_w, int local_in_ch, int local_out_ch, int local_k_sz, int stride, bool R, int nnup_fac, int k_num, int if_4);
 
 //void wino_conv_wrapper(quad_tf * input, quad_tf * bias, quad_tf * output, quad_tw * kernel, int local_in_h, int local_in_w, int local_out_h, int local_out_w, int local_in_ch, int local_out_ch, int local_k_sz, int stride, bool R, int nnup_fac, int k_num, int if_4);
 
