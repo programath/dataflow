@@ -12,7 +12,7 @@ extern "C" float sqrtf(float);
 typedef ap_ufixed<16,5> data_tf;
 typedef ap_fixed<16,1> data_tw;
 typedef ap_fixed<16,5> data_tb;
-typedef ap_fixed<22,8> data_tt;//* 8
+typedef ap_fixed<23,8> data_tt;//* 8
 typedef ap_fixed<20,8> data_tx;
 typedef ap_fixed<23,8> data_tp;
 typedef ap_fixed<18,8> data_tm;
