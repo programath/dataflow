@@ -185,9 +185,12 @@ void fc_soft_layer(quad_tf input_1[fc_h*fc_w*16], quad_tf input_2[fc_h*fc_w*16],
                    data_ro output[fc_h*fc_w], data_tw fc_bias0,data_tw fc_bias1,data_tw fc_bias2,data_tw fc_bias3,data_tw fc_bias4,data_tw fc_bias5){
 #pragma HLS DATA_PACK variable=input_1
 #pragma HLS DATA_PACK variable=input_2
-#pragma HLS DATA_PACK variable=kernel_l
-#pragma HLS DATA_PACK variable=kernel_m
-#pragma HLS DATA_PACK variable=kernel_r
+#pragma HLS DATA_PACK variable=kernel_l_1
+#pragma HLS DATA_PACK variable=kernel_l_2
+#pragma HLS DATA_PACK variable=kernel_m_1
+#pragma HLS DATA_PACK variable=kernel_m_2
+#pragma HLS DATA_PACK variable=kernel_r_1
+#pragma HLS DATA_PACK variable=kernel_r_2
 #pragma HLS DATA_PACK variable=output
 
 

@@ -352,10 +352,10 @@ void cal_block(data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2[buf_w][in_ch], d
 						tmp2 = add_rst[tn][tr][1];
 						tmp3 = add_rst[tn][tr][2];
 						tmp4 = add_rst[tn][tr][3];
-						idx1 = icolidx;//3
-						idx2 = icolidx;//4
-						idx3 = icolidx;//1
-						idx4 = icolidx;//2
+						idx1 = icolidx;//1
+						idx2 = icolidx;//2
+						idx3 = icolidx;//3
+						idx4 = icolidx;//4
 					}
 					else {
 						if (icolidx & 0x01){
