@@ -179,9 +179,9 @@ void fc_convolve(data_tb in_buf[2][fc_w][fc_in_ch / 2],
 }
 
 void fc_soft_layer(quad_tf input_1[fc_h*fc_w*16], quad_tf input_2[fc_h*fc_w*16],
-                   quad_tw kernel_l_1[fc_in_ch*fc_out_ch/4], quad_tw kernel_l_2[fc_in_ch*fc_out_ch/4],
-                   quad_tw kernel_m_1[fc_in_ch*fc_out_ch/4], quad_tw kernel_m_2[fc_in_ch*fc_out_ch/4],
-                   quad_tw kernel_r_1[fc_in_ch*fc_out_ch/4], quad_tw kernel_r_2[fc_in_ch*fc_out_ch/4],
+                   quad_tw kernel_l_1[fc_out_ch/4], quad_tw kernel_l_2[fc_out_ch/4],
+                   quad_tw kernel_m_1[fc_out_ch/4], quad_tw kernel_m_2[fc_out_ch/4],
+                   quad_tw kernel_r_1[fc_out_ch/4], quad_tw kernel_r_2[fc_out_ch/4],
                    data_ro output[fc_h*fc_w], data_tw fc_bias0,data_tw fc_bias1,data_tw fc_bias2,data_tw fc_bias3,data_tw fc_bias4,data_tw fc_bias5){
 #pragma HLS DATA_PACK variable=input_1
 #pragma HLS DATA_PACK variable=input_2
@@ -241,7 +241,7 @@ void fc_soft_layer(quad_tf input_1[fc_h*fc_w*16], quad_tf input_2[fc_h*fc_w*16],
     fc_bias_r[0] = fc_bias4;
     fc_bias_r[1] = fc_bias5;
 
-    load_fc_kernel(kernel_l_1, kernel_l_2, kernel_m_1, kernel_l_2, kernel_r_1, kernel_l_2, k_buf_l, k_buf_m, k_buf_r);
+    load_fc_kernel(kernel_l_1, kernel_l_2, kernel_m_1, kernel_m_2, kernel_r_1, kernel_r_2, k_buf_l, k_buf_m, k_buf_r);
     load_fc_line(input_1, input_2, buf_line_1, 0);
     if(1){
         fc_convolve(buf_line_1, k_buf_l, k_buf_m, k_buf_r, outbuf_l_1, outbuf_m_1, outbuf_r_1, fc_bias_l, fc_bias_m, fc_bias_r);
