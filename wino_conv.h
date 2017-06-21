@@ -9,7 +9,7 @@ extern "C" float sqrtf(float);
 #define NEW
 #define FIXED_NUMBER
 #ifdef FIXED_NUMBER
-typedef ap_ufixed<16,5> data_tf;
+typedef ap_fixed<16,6> data_tf;
 typedef ap_fixed<16,1> data_tw;
 typedef ap_fixed<16,5> data_tb;
 typedef ap_fixed<22,7> data_tt;//* 8

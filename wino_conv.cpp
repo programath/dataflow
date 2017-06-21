@@ -9,6 +9,9 @@ using namespace std;
 
 #ifdef FIXED_NUMBER
 ap_fixed<25,1>tmp_64_par = 0.015625;
+ap_fixed<25,2>mean_b = 1.64204688;
+ap_fixed<25,2>mean_g = 1.82467188;
+ap_fixed<25,2>mean_r = 1.9325;
 #else
 double tmp_64_par = 0.015625;
 #endif
@@ -549,27 +552,27 @@ void load_lines(quad_tf *input, data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2
 	            quad_layer_1_type tmp = ((quad_layer_1_type *)input)[idx];
 				switch (num){
 					case 0:
-						in_buf_1[i][j] = tmp.a * tmp_64_par;
-	           			in_buf_1[i][j+1] = tmp.b * tmp_64_par;
-	            		in_buf_1[i][j+2] = tmp.c * tmp_64_par;
+						in_buf_1[i][j] = tmp.a * tmp_64_par - mean_b;
+	           			in_buf_1[i][j+1] = tmp.b * tmp_64_par - mean_g ;
+	            		in_buf_1[i][j+2] = tmp.c * tmp_64_par - mean_r;
 	            		in_buf_1[i][j+3] = tmp.d * tmp_64_par;
 						break;
 					case 1:
-						in_buf_2[i][j] = tmp.a * tmp_64_par;
-	           			in_buf_2[i][j+1] = tmp.b * tmp_64_par;
-	            		in_buf_2[i][j+2] = tmp.c * tmp_64_par;
+						in_buf_2[i][j] = tmp.a * tmp_64_par - mean_b;
+	           			in_buf_2[i][j+1] = tmp.b * tmp_64_par -mean_g;
+	            		in_buf_2[i][j+2] = tmp.c * tmp_64_par - mean_r;
 	            		in_buf_2[i][j+3] = tmp.d * tmp_64_par;
 						break;
 					case 2:
-						in_buf_3[i][j] = tmp.a * tmp_64_par;
-	           			in_buf_3[i][j+1] = tmp.b * tmp_64_par;
-	            		in_buf_3[i][j+2] = tmp.c * tmp_64_par;
+						in_buf_3[i][j] = tmp.a * tmp_64_par - mean_b;
+	           			in_buf_3[i][j+1] = tmp.b * tmp_64_par - mean_g;
+	            		in_buf_3[i][j+2] = tmp.c * tmp_64_par - mean_r;
 	            		in_buf_3[i][j+3] = tmp.d * tmp_64_par;
 						break;
 					case 3:
-						in_buf_4[i][j] = tmp.a * tmp_64_par;
-	           			in_buf_4[i][j+1] = tmp.b * tmp_64_par;
-	            		in_buf_4[i][j+2] = tmp.c * tmp_64_par;
+						in_buf_4[i][j] = tmp.a * tmp_64_par - mean_b;
+	           			in_buf_4[i][j+1] = tmp.b * tmp_64_par - mean_g;
+	            		in_buf_4[i][j+2] = tmp.c * tmp_64_par - mean_r;
 	            		in_buf_4[i][j+3] = tmp.d * tmp_64_par;
 						break;
 					default:

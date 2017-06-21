@@ -72,10 +72,10 @@ void load_fc_kernel(quad_tw *kernel_l_1, quad_tw *kernel_l_2, quad_tw *kernel_m_
     }
     for(int in = 0; in < fc_in_ch/4; ++in){
 #pragma HLS PIPELINE
-        k_buf_m[0][in + fc_in_ch/4][0] = kernel_r_2[in].a;
-        k_buf_m[0][in + fc_in_ch/4][1] = kernel_r_2[in].b;
-        k_buf_m[1][in + fc_in_ch/4][0] = kernel_r_2[in].c;
-        k_buf_m[1][in + fc_in_ch/4][1] = kernel_r_2[in].d;
+        k_buf_r[0][in + fc_in_ch/4][0] = kernel_r_2[in].a;
+        k_buf_r[0][in + fc_in_ch/4][1] = kernel_r_2[in].b;
+        k_buf_r[1][in + fc_in_ch/4][0] = kernel_r_2[in].c;
+        k_buf_r[1][in + fc_in_ch/4][1] = kernel_r_2[in].d;
     }
 }
 
