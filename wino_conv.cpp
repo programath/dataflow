@@ -112,62 +112,62 @@ void Winograd_Mul(data_tx transform2_input[6][6], data_tw kernel[3][3], data_to 
 
 #ifdef NEW
 
-	G_kernel_loop:
-	for(i = 0; i < 3; ++i)
-	{
-		transform1_kernel[0][i] = (kernel[0][i]);
-		transform1_kernel[1][i] = (kernel[0][i] + kernel[1][i] + kernel[2][i]);
-		transform1_kernel[2][i] = (kernel[0][i] - kernel[1][i] + kernel[2][i]);
-		transform1_kernel[3][i] = (div_2(kernel[0][i]) + ((kernel[1][i]) + mul_2(kernel[2][i])));
-		transform1_kernel[4][i] = (div_2(kernel[0][i]) - ((kernel[1][i]) - mul_2(kernel[2][i])));
-		transform1_kernel[5][i] = kernel[2][i];
-	}
+    G_kernel_loop:
+    for(i = 0; i < 3; ++i)
+    {
+        transform1_kernel[0][i] = (kernel[0][i]);
+        transform1_kernel[1][i] = (kernel[0][i] + kernel[1][i] + kernel[2][i]);
+        transform1_kernel[2][i] = (kernel[0][i] - kernel[1][i] + kernel[2][i]);
+        transform1_kernel[3][i] = (div_2(kernel[0][i]) + ((kernel[1][i]) + mul_2(kernel[2][i])));
+        transform1_kernel[4][i] = (div_2(kernel[0][i]) - ((kernel[1][i]) - mul_2(kernel[2][i])));
+        transform1_kernel[5][i] = kernel[2][i];
+    }
 
-	transform1_kernel_G_transposition_loop:
-	for(i = 0; i < 6; ++i)
-	{
-		transform2_kernel[i][0] = (transform1_kernel[i][0]);
-		transform2_kernel[i][1] = (transform1_kernel[i][0] + transform1_kernel[i][1] + transform1_kernel[i][2]);
-		transform2_kernel[i][2] = (transform1_kernel[i][0] - transform1_kernel[i][1] + transform1_kernel[i][2]);
-		transform2_kernel[i][3] = (div_2(transform1_kernel[i][0]) + (transform1_kernel[i][1] + mul_2(transform1_kernel[i][2])));
-		transform2_kernel[i][4] = (div_2(transform1_kernel[i][0]) - (transform1_kernel[i][1] - mul_2(transform1_kernel[i][2])));
-		transform2_kernel[i][5] = transform1_kernel[i][2];
-	}
+    transform1_kernel_G_transposition_loop:
+    for(i = 0; i < 6; ++i)
+    {
+        transform2_kernel[i][0] = (transform1_kernel[i][0]);
+        transform2_kernel[i][1] = (transform1_kernel[i][0] + transform1_kernel[i][1] + transform1_kernel[i][2]);
+        transform2_kernel[i][2] = (transform1_kernel[i][0] - transform1_kernel[i][1] + transform1_kernel[i][2]);
+        transform2_kernel[i][3] = (div_2(transform1_kernel[i][0]) + (transform1_kernel[i][1] + mul_2(transform1_kernel[i][2])));
+        transform2_kernel[i][4] = (div_2(transform1_kernel[i][0]) - (transform1_kernel[i][1] - mul_2(transform1_kernel[i][2])));
+        transform2_kernel[i][5] = transform1_kernel[i][2];
+    }
 
-	GEMM_loop:
-	for(i = 0; i < 6; ++i)
-	for(j = 0; j < 6; ++j)
-	{
-		transform3_input[i][j] = transform2_kernel[i][j] * transform2_input[i][j];
-	}
+    GEMM_loop:
+    for(i = 0; i < 6; ++i)
+        for(j = 0; j < 6; ++j)
+        {
+            transform3_input[i][j] = transform2_kernel[i][j] * transform2_input[i][j];
+        }
 
-	A_transposition_GEMM_loop:
-	for(i = 0; i < 6; ++i)
-	{
-		transform_output[0][i] = transform3_input[0][i] - div_3(mul_2((data_tt)(transform3_input[1][i] + transform3_input[2][i])) - div_2((data_tt)(transform3_input[3][i] + transform3_input[4][i])));
-		transform_output[1][i] = div_3(mul_2((data_tt)(-transform3_input[1][i] + transform3_input[2][i])) + (data_tt)(transform3_input[3][i] - transform3_input[4][i]));
-		transform_output[2][i] = div_3_mul_2((data_tt)(-transform3_input[1][i] - transform3_input[2][i] + transform3_input[3][i] + transform3_input[4][i]));
-		transform_output[3][i] = div_3_mul_2((data_tt)(-transform3_input[1][i] + transform3_input[2][i] + mul_2((data_tt)(transform3_input[3][i] - transform3_input[4][i])))) + mul_4((data_tt)(transform3_input[5][i]));
+    A_transposition_GEMM_loop:
+    for(i = 0; i < 6; ++i)
+    {
+        transform_output[0][i] = transform3_input[0][i] - div_3(mul_2((data_tt)(transform3_input[1][i] + transform3_input[2][i])) - div_2((data_tt)(transform3_input[3][i] + transform3_input[4][i])));
+        transform_output[1][i] = div_3(mul_2((data_tt)(-transform3_input[1][i] + transform3_input[2][i])) + (data_tt)(transform3_input[3][i] - transform3_input[4][i]));
+        transform_output[2][i] = div_3_mul_2((data_tt)(-transform3_input[1][i] - transform3_input[2][i] + transform3_input[3][i] + transform3_input[4][i]));
+        transform_output[3][i] = div_3_mul_2((data_tt)(-transform3_input[1][i] + transform3_input[2][i] + mul_2((data_tt)(transform3_input[3][i] - transform3_input[4][i])))) + mul_4((data_tt)(transform3_input[5][i]));
         // transform_output[0][i] = transform3_input[0][i] - div_3(mul_2((transform3_input[1][i] + transform3_input[2][i])) - div_2((data_tt)(transform3_input[3][i] + transform3_input[4][i])));
-		// transform_output[1][i] = div_3(mul_2((-transform3_input[1][i] + transform3_input[2][i])) + (transform3_input[3][i] - transform3_input[4][i]));
-		// transform_output[2][i] = div_3(mul_2((-transform3_input[1][i] - transform3_input[2][i] + transform3_input[3][i] + transform3_input[4][i])));
-		// transform_output[3][i] = div_3(mul_2((-transform3_input[1][i] + transform3_input[2][i] + mul_2((transform3_input[3][i] - transform3_input[4][i]))))) + mul_4((transform3_input[5][i]));
+        // transform_output[1][i] = div_3(mul_2((-transform3_input[1][i] + transform3_input[2][i])) + (transform3_input[3][i] - transform3_input[4][i]));
+        // transform_output[2][i] = div_3(mul_2((-transform3_input[1][i] - transform3_input[2][i] + transform3_input[3][i] + transform3_input[4][i])));
+        // transform_output[3][i] = div_3(mul_2((-transform3_input[1][i] + transform3_input[2][i] + mul_2((transform3_input[3][i] - transform3_input[4][i]))))) + mul_4((transform3_input[5][i]));
 
-	}
+    }
 
-	A_loop:
-	for(i = 0; i < 4; ++i)
-	{
+    A_loop:
+    for(i = 0; i < 4; ++i)
+    {
 //		output[i][0] = transform_output[i][0] - div_3(mul_2((data_tt)(transform_output[i][1] + transform_output[i][2])) -  div_2((data_tt)(transform_output[i][3] + transform_output[i][4])));
 //		output[i][1] = div_3(mul_2((data_tt)(-transform_output[i][1] + transform_output[i][2])) + (data_tt)(transform_output[i][3] - transform_output[i][4]));
 //		output[i][2] = div_3(mul_2((data_tt)(-transform_output[i][1] - transform_output[i][2] + transform_output[i][3] + transform_output[i][4])));
 //		output[i][3] = div_3(mul_2((data_tt)(-transform_output[i][1] + transform_output[i][2] + mul_2((data_tt)(transform_output[i][3] - transform_output[i][4]))))) + mul_4((data_tt)(transform_output[i][5]));
-         output[i][0] = transform_output[i][0] - div_3(mul_2((transform_output[i][1] + transform_output[i][2])) -  div_2((transform_output[i][3] + transform_output[i][4])));
-		 output[i][1] = div_3(mul_2((-transform_output[i][1] + transform_output[i][2])) + (transform_output[i][3] - transform_output[i][4]));
-		 output[i][2] = div_3_mul_2((-transform_output[i][1] - transform_output[i][2] + transform_output[i][3] + transform_output[i][4]));
-		 output[i][3] = div_3_mul_2((-transform_output[i][1] + transform_output[i][2] + mul_2((transform_output[i][3] - transform_output[i][4])))) + mul_4((transform_output[i][5]));
+        output[i][0] = transform_output[i][0] - div_3(mul_2((transform_output[i][1] + transform_output[i][2])) -  div_2((transform_output[i][3] + transform_output[i][4])));
+        output[i][1] = div_3(mul_2((-transform_output[i][1] + transform_output[i][2])) + (transform_output[i][3] - transform_output[i][4]));
+        output[i][2] = div_3_mul_2((-transform_output[i][1] - transform_output[i][2] + transform_output[i][3] + transform_output[i][4]));
+        output[i][3] = div_3_mul_2((-transform_output[i][1] + transform_output[i][2] + mul_2((transform_output[i][3] - transform_output[i][4])))) + mul_4((transform_output[i][5]));
 
-	}
+    }
 
 #else
     B_transposition_input_loop:
@@ -264,7 +264,7 @@ void tozero(data_to a[Tn][out_tile_sz][out_tile_sz])
 
 void cal_block(data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2[buf_w][in_ch], data_tf in_buf_3[buf_w][in_ch], data_tf in_buf_4[buf_w][in_ch], data_tf in_buf_5[buf_w][in_ch], data_tf in_buf_6[buf_w][in_ch], data_tw k_buf[out_ch][in_ch][3][3], data_to out_buf[4][buf_o][out_ch], int o_w, int m_off, int max_n, int in_off, int stride){
 
-	#pragma HLS INLINE off
+#pragma HLS INLINE off
 
     col_loop:
 
@@ -298,32 +298,32 @@ void cal_block(data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2[buf_w][in_ch], d
                     in_tile[5][i] = in_buf_6[col + i][tm + Tm * m_off];
                 }
 
-				data_tm transform1_input[6][6];
-				data_tx transform2_input[6][6];
-				#pragma HLS array_partition variable=transform1_input complete dim=0
-				#pragma HLS array_partition variable=transform2_input complete dim=0
+                data_tm transform1_input[6][6];
+                data_tx transform2_input[6][6];
+#pragma HLS array_partition variable=transform1_input complete dim=0
+#pragma HLS array_partition variable=transform2_input complete dim=0
 
-				 B_transposition_input_loop:
-				for(int i = 0; i < 6; ++i)
-				{
-					transform1_input[0][i] = in_tile[0][i] - in_tile[2][i] - div_4(in_tile[2][i] - in_tile[4][i]);
-					transform1_input[1][i] = -((in_tile[1][i] + in_tile[2][i])) + div_4(in_tile[3][i] + in_tile[4][i]);
-					transform1_input[2][i] = (in_tile[1][i] - in_tile[2][i]) - div_4(in_tile[3][i] - in_tile[4][i]);
-					transform1_input[3][i] = -(in_tile[1][i] - in_tile[3][i]) - div_2(in_tile[2][i] - in_tile[4][i]);
-					transform1_input[4][i] = (in_tile[1][i] - in_tile[3][i]) - div_2(in_tile[2][i] - in_tile[4][i]);
-					transform1_input[5][i] = in_tile[1][i] - in_tile[3][i] - div_4(in_tile[3][i] - in_tile[5][i]);
-				}
+                B_transposition_input_loop:
+                for(int i = 0; i < 6; ++i)
+                {
+                    transform1_input[0][i] = in_tile[0][i] - in_tile[2][i] - div_4(in_tile[2][i] - in_tile[4][i]);
+                    transform1_input[1][i] = -((in_tile[1][i] + in_tile[2][i])) + div_4(in_tile[3][i] + in_tile[4][i]);
+                    transform1_input[2][i] = (in_tile[1][i] - in_tile[2][i]) - div_4(in_tile[3][i] - in_tile[4][i]);
+                    transform1_input[3][i] = -(in_tile[1][i] - in_tile[3][i]) - div_2(in_tile[2][i] - in_tile[4][i]);
+                    transform1_input[4][i] = (in_tile[1][i] - in_tile[3][i]) - div_2(in_tile[2][i] - in_tile[4][i]);
+                    transform1_input[5][i] = in_tile[1][i] - in_tile[3][i] - div_4(in_tile[3][i] - in_tile[5][i]);
+                }
 
-				transform1_input_B_loop:
-				for(int i = 0; i < 6; ++i){
+                transform1_input_B_loop:
+                for(int i = 0; i < 6; ++i){
 
-					transform2_input[i][0] = transform1_input[i][0] - transform1_input[i][2] - div_4(transform1_input[i][2] - transform1_input[i][4]);
-					transform2_input[i][1] = -(transform1_input[i][1] + transform1_input[i][2]) + div_4(transform1_input[i][3] + transform1_input[i][4]);
-					transform2_input[i][2] = (transform1_input[i][1] - transform1_input[i][2]) - div_4(transform1_input[i][3] - transform1_input[i][4]);
-					transform2_input[i][3] = (-transform1_input[i][1] + transform1_input[i][3]) - div_2(transform1_input[i][2] - transform1_input[i][4]);
-					transform2_input[i][4] = (transform1_input[i][1] - transform1_input[i][3]) - div_2(transform1_input[i][2] - transform1_input[i][4]);
-					transform2_input[i][5] = transform1_input[i][1] - transform1_input[i][3] - div_4(transform1_input[i][3] - transform1_input[i][5]);
-				}
+                    transform2_input[i][0] = transform1_input[i][0] - transform1_input[i][2] - div_4(transform1_input[i][2] - transform1_input[i][4]);
+                    transform2_input[i][1] = -(transform1_input[i][1] + transform1_input[i][2]) + div_4(transform1_input[i][3] + transform1_input[i][4]);
+                    transform2_input[i][2] = (transform1_input[i][1] - transform1_input[i][2]) - div_4(transform1_input[i][3] - transform1_input[i][4]);
+                    transform2_input[i][3] = (-transform1_input[i][1] + transform1_input[i][3]) - div_2(transform1_input[i][2] - transform1_input[i][4]);
+                    transform2_input[i][4] = (transform1_input[i][1] - transform1_input[i][3]) - div_2(transform1_input[i][2] - transform1_input[i][4]);
+                    transform2_input[i][5] = transform1_input[i][1] - transform1_input[i][3] - div_4(transform1_input[i][3] - transform1_input[i][5]);
+                }
 
                 out_channel_loop:
                 for(int tn = 0; tn < Tn; ++tn){
@@ -334,60 +334,60 @@ void cal_block(data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2[buf_w][in_ch], d
                     }
 
                     Winograd_Mul(transform2_input, kernel_tile, wino_rst);
-					for(int tr = 0; tr < out_tile_sz; ++tr){
-                         for(int tc = 0; tc < out_tile_sz; ++tc){
-                             add_rst[tn][tr][tc] += wino_rst[tr][tc];
-                         }
-                     }
-                 }
-             }
+                    for(int tr = 0; tr < out_tile_sz; ++tr){
+                        for(int tc = 0; tc < out_tile_sz; ++tc){
+                            add_rst[tn][tr][tc] += wino_rst[tr][tc];
+                        }
+                    }
+                }
+            }
             // notice that base address colidx=2k might be 4m or 4m+2 which confuses the compiler
             // force base address to be multiples of 4, which means 4*idx
             // if colidx == 4m than keep every thing the same, or (4m+2) results in the indices become (4m+2), (4m+3), (4(m+1)+0), (4(m+1)+1)
-			int icolidx = col >> 2;
-			int tcolidx = icolidx >> 1;
-			for(int tn = 0; tn < Tn; ++tn){
-				for(int tr = 0; tr < out_tile_sz; ++tr){
-					int idx1,idx2,idx3,idx4;
-					data_to tmp1, tmp2, tmp3, tmp4;
-					if (stride == 1){
-						tmp1 = add_rst[tn][tr][0];
-						tmp2 = add_rst[tn][tr][1];
-						tmp3 = add_rst[tn][tr][2];
-						tmp4 = add_rst[tn][tr][3];
-						idx1 = icolidx;//1
-						idx2 = icolidx;//2
-						idx3 = icolidx;//3
-						idx4 = icolidx;//4
-					}
-					else {
-						if (icolidx & 0x01){
-							idx1 = tcolidx + 1;//3
-							idx2 = tcolidx + 1;//4
-							idx3 = tcolidx;//1
-							idx4 = tcolidx;//2
-							tmp1 = 0;
-							tmp2 = 0;
-							tmp3 = add_rst[tn][tr][0];
-							tmp4 = add_rst[tn][tr][2];
-						}
-						else {
-							idx1 = tcolidx;//1
-							idx2 = tcolidx;//2
-							idx3 = tcolidx;//3
-							idx4 = tcolidx;//4
-							tmp1 = add_rst[tn][tr][0];
-							tmp2 = add_rst[tn][tr][2];
-							tmp3 = 0;
-							tmp4 = 0;
-						}
-					}
-					out_buf[tr][idx1*4+0][tn + Tn * n_off] += tmp1;
-					out_buf[tr][idx2*4+1][tn + Tn * n_off] += tmp2;
-					out_buf[tr][idx3*4+2][tn + Tn * n_off] += tmp3;
-					out_buf[tr][idx4*4+3][tn + Tn * n_off] += tmp4;
-				}
-			}
+            int icolidx = col >> 2;
+            int tcolidx = icolidx >> 1;
+            for(int tn = 0; tn < Tn; ++tn){
+                for(int tr = 0; tr < out_tile_sz; ++tr){
+                    int idx1,idx2,idx3,idx4;
+                    data_to tmp1, tmp2, tmp3, tmp4;
+                    if (stride == 1){
+                        tmp1 = add_rst[tn][tr][0];
+                        tmp2 = add_rst[tn][tr][1];
+                        tmp3 = add_rst[tn][tr][2];
+                        tmp4 = add_rst[tn][tr][3];
+                        idx1 = icolidx;//1
+                        idx2 = icolidx;//2
+                        idx3 = icolidx;//3
+                        idx4 = icolidx;//4
+                    }
+                    else {
+                        if (icolidx & 0x01){
+                            idx1 = tcolidx + 1;//3
+                            idx2 = tcolidx + 1;//4
+                            idx3 = tcolidx;//1
+                            idx4 = tcolidx;//2
+                            tmp1 = 0;
+                            tmp2 = 0;
+                            tmp3 = add_rst[tn][tr][0];
+                            tmp4 = add_rst[tn][tr][2];
+                        }
+                        else {
+                            idx1 = tcolidx;//1
+                            idx2 = tcolidx;//2
+                            idx3 = tcolidx;//3
+                            idx4 = tcolidx;//4
+                            tmp1 = add_rst[tn][tr][0];
+                            tmp2 = add_rst[tn][tr][2];
+                            tmp3 = 0;
+                            tmp4 = 0;
+                        }
+                    }
+                    out_buf[tr][idx1*4+0][tn + Tn * n_off] += tmp1;
+                    out_buf[tr][idx2*4+1][tn + Tn * n_off] += tmp2;
+                    out_buf[tr][idx3*4+2][tn + Tn * n_off] += tmp3;
+                    out_buf[tr][idx4*4+3][tn + Tn * n_off] += tmp4;
+                }
+            }
         }
     }
 }
@@ -471,14 +471,14 @@ void zero_outbuf(data_to out_buf[4][buf_o][out_ch]){
         for(int ch = 0; ch < out_ch; ch += 4){
 #pragma HLS PIPELINE
             for(int i = 0; i < 4; ++i){
-          ///      for(int j = 0; j < 4; ++j){
-                    for(int k = 0; k < 4; ++k){
-                        out_buf[i][col][k+ch] = 0;
-                    }
+                ///      for(int j = 0; j < 4; ++j){
+                for(int k = 0; k < 4; ++k){
+                    out_buf[i][col][k+ch] = 0;
                 }
             }
         }
     }
+}
 
 void load_lines(quad_tf *input, data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2[buf_w][in_ch], data_tf in_buf_3[buf_w][in_ch], data_tf in_buf_4[buf_w][in_ch], int r_off, int local_i_h, int local_i_w, int local_in_ch, int if_4){
 #pragma HLS INLINE off
@@ -490,98 +490,98 @@ void load_lines(quad_tf *input, data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2
     int row_sz = local_i_w * local_in_ch;
     int idx_offset = (r_off * row_sz)>>2;
     int idx = idx_offset;
-	int num_bound;
-	if (r_off == 0)
-		num_bound = 2;
-	else
-		num_bound = 4;
+    int num_bound;
+    if (r_off == 0)
+        num_bound = 2;
+    else
+        num_bound = 4;
     if(!if_4){
-		for (int num = 0; num < num_bound; num++){
-	        for(int i = 0; (i < local_i_w) && (flag); ++i){
-	//#pragma HLS LOOP_TRIPCOUNT min=112 max=112
-	#pragma HLS LOOP_TRIPCOUNT min=246 max=246
-	            for(int j = 0; j < local_in_ch; j+=4){
-	#pragma HLS LOOP_TRIPCOUNT min=16 max=16
-	#pragma HLS PIPELINE
-	                //if ((!if_4) && j > 0) break;
-	                //quad_tf tmp = input[(r_off * row_sz + i * local_in_ch + j) / 4];
-	            	quad_tf tmp = input[idx];
-					switch (num){
-						case 0:
-							in_buf_1[i][j] = tmp.a;
-	               			in_buf_1[i][j+1] = tmp.b;
-	                		in_buf_1[i][j+2] = tmp.c;
-	                		in_buf_1[i][j+3] = tmp.d;
-							break;
-						case 1:
-							in_buf_2[i][j] = tmp.a;
-	               			in_buf_2[i][j+1] = tmp.b;
-	                		in_buf_2[i][j+2] = tmp.c;
-	                		in_buf_2[i][j+3] = tmp.d;
-							break;
-						case 2:
-							in_buf_3[i][j] = tmp.a;
-	               			in_buf_3[i][j+1] = tmp.b;
-	                		in_buf_3[i][j+2] = tmp.c;
-	                		in_buf_3[i][j+3] = tmp.d;
-							break;
-						case 3:
-							in_buf_4[i][j] = tmp.a;
-	               			in_buf_4[i][j+1] = tmp.b;
-	                		in_buf_4[i][j+2] = tmp.c;
-	                		in_buf_4[i][j+3] = tmp.d;
-							break;
-						default:
-							break;
-					}
-	                idx++;
-	            }
-	        }
-		}
+        for (int num = 0; num < num_bound; num++){
+            for(int i = 0; (i < local_i_w) && (flag); ++i){
+                //#pragma HLS LOOP_TRIPCOUNT min=112 max=112
+#pragma HLS LOOP_TRIPCOUNT min=246 max=246
+                for(int j = 0; j < local_in_ch; j+=4){
+#pragma HLS LOOP_TRIPCOUNT min=16 max=16
+#pragma HLS PIPELINE
+                    //if ((!if_4) && j > 0) break;
+                    //quad_tf tmp = input[(r_off * row_sz + i * local_in_ch + j) / 4];
+                    quad_tf tmp = input[idx];
+                    switch (num){
+                        case 0:
+                            in_buf_1[i][j] = tmp.a;
+                            in_buf_1[i][j+1] = tmp.b;
+                            in_buf_1[i][j+2] = tmp.c;
+                            in_buf_1[i][j+3] = tmp.d;
+                            break;
+                        case 1:
+                            in_buf_2[i][j] = tmp.a;
+                            in_buf_2[i][j+1] = tmp.b;
+                            in_buf_2[i][j+2] = tmp.c;
+                            in_buf_2[i][j+3] = tmp.d;
+                            break;
+                        case 2:
+                            in_buf_3[i][j] = tmp.a;
+                            in_buf_3[i][j+1] = tmp.b;
+                            in_buf_3[i][j+2] = tmp.c;
+                            in_buf_3[i][j+3] = tmp.d;
+                            break;
+                        case 3:
+                            in_buf_4[i][j] = tmp.a;
+                            in_buf_4[i][j+1] = tmp.b;
+                            in_buf_4[i][j+2] = tmp.c;
+                            in_buf_4[i][j+3] = tmp.d;
+                            break;
+                        default:
+                            break;
+                    }
+                    idx++;
+                }
+            }
+        }
     }
     else{
-		for (int num = 0; num < num_bound; num++){
-	        for(int i = 0; (i < local_i_w) && flag; ++i){
-	//#pragma HLS LOOP_TRIPCOUNT min=112 max=112
-	#pragma HLS LOOP_TRIPCOUNT min=486 max=486
-	            //for(int j = 0; j < 4; j+=4){
-	//#pragma HLS LOOP_TRIPCOUNT min=16 max=16
-	#pragma HLS PIPELINE
-	            int j = 0;
-	            //quad_tf tmp = input[(r_off * row_sz + i * local_in_ch + j) / 4];
-	            quad_layer_1_type tmp = ((quad_layer_1_type *)input)[idx];
-				switch (num){
-					case 0:
-						in_buf_1[i][j] = tmp.a * tmp_64_par - mean_b;
-	           			in_buf_1[i][j+1] = tmp.b * tmp_64_par - mean_g ;
-	            		in_buf_1[i][j+2] = tmp.c * tmp_64_par - mean_r;
-	            		in_buf_1[i][j+3] = tmp.d * tmp_64_par;
-						break;
-					case 1:
-						in_buf_2[i][j] = tmp.a * tmp_64_par - mean_b;
-	           			in_buf_2[i][j+1] = tmp.b * tmp_64_par -mean_g;
-	            		in_buf_2[i][j+2] = tmp.c * tmp_64_par - mean_r;
-	            		in_buf_2[i][j+3] = tmp.d * tmp_64_par;
-						break;
-					case 2:
-						in_buf_3[i][j] = tmp.a * tmp_64_par - mean_b;
-	           			in_buf_3[i][j+1] = tmp.b * tmp_64_par - mean_g;
-	            		in_buf_3[i][j+2] = tmp.c * tmp_64_par - mean_r;
-	            		in_buf_3[i][j+3] = tmp.d * tmp_64_par;
-						break;
-					case 3:
-						in_buf_4[i][j] = tmp.a * tmp_64_par - mean_b;
-	           			in_buf_4[i][j+1] = tmp.b * tmp_64_par - mean_g;
-	            		in_buf_4[i][j+2] = tmp.c * tmp_64_par - mean_r;
-	            		in_buf_4[i][j+3] = tmp.d * tmp_64_par;
-						break;
-					default:
-						break;
-				}
-	            idx++;
-	        }
-	    }
-	}
+        for (int num = 0; num < num_bound; num++){
+            for(int i = 0; (i < local_i_w) && flag; ++i){
+                //#pragma HLS LOOP_TRIPCOUNT min=112 max=112
+#pragma HLS LOOP_TRIPCOUNT min=486 max=486
+                //for(int j = 0; j < 4; j+=4){
+                //#pragma HLS LOOP_TRIPCOUNT min=16 max=16
+#pragma HLS PIPELINE
+                int j = 0;
+                quad_tf tmp = input[idx];
+                //quad_layer_1_type tmp = ((quad_layer_1_type *)input)[idx];
+                switch (num){
+                    case 0:
+                        in_buf_1[i][j] = tmp.a;
+                        in_buf_1[i][j+1] = tmp.b ;
+                        in_buf_1[i][j+2] = tmp.c;
+                        in_buf_1[i][j+3] = tmp.d;
+                        break;
+                    case 1:
+                        in_buf_2[i][j] = tmp.a;
+                        in_buf_2[i][j+1] = tmp.b;
+                        in_buf_2[i][j+2] = tmp.c;
+                        in_buf_2[i][j+3] = tmp.d;
+                        break;
+                    case 2:
+                        in_buf_3[i][j] = tmp.a;
+                        in_buf_3[i][j+1] = tmp.b;
+                        in_buf_3[i][j+2] = tmp.c;
+                        in_buf_3[i][j+3] = tmp.d;
+                        break;
+                    case 3:
+                        in_buf_4[i][j] = tmp.a;
+                        in_buf_4[i][j+1] = tmp.b;
+                        in_buf_4[i][j+2] = tmp.c;
+                        in_buf_4[i][j+3] = tmp.d;
+                        break;
+                    default:
+                        break;
+                }
+                idx++;
+            }
+        }
+    }
 }
 
 void load_kernel(quad_tw *kernel, data_tw k_buf[out_ch][in_ch][3][3], int local_in_ch, int local_out_ch){
@@ -628,47 +628,47 @@ void store_output(data_to out_buf[4][buf_o][out_ch], quad_tf *output, quad_tf *b
 #pragma HLS LOOP_TRIPCOUNT min=16 max=16
 //#pragma HLS latency max = 4
 #pragma HLS PIPELINE
-            	if (j < local_out_ch){
-					int istride = i;
-					if (stride == 2){
-						istride = i << 1;
+                if (j < local_out_ch){
+                    int istride = i;
+                    if (stride == 2){
+                        istride = i << 1;
 //						colstride = col << 1;
-					}
-					//if(local_out_ch == 32 && j == 32) break;
-					data_to tmp_1 = (data_tb)(bias[idx].a) + out_buf[istride][col][j];
-					if(relu && (tmp_1 < 0)){
-						//tmp_1 = tmp_1/10;
-						tmp_1 = 0;
-					}
-					output[idx].a = tmp_1;
-					out_buf[istride][col][j] = 0;
+                    }
+                    //if(local_out_ch == 32 && j == 32) break;
+                    data_to tmp_1 = (data_tb)(bias[idx].a) + out_buf[istride][col][j];
+                    if(relu && (tmp_1 < 0)){
+                        //tmp_1 = tmp_1/10;
+                        tmp_1 = 0;
+                    }
+                    output[idx].a = tmp_1;
+                    out_buf[istride][col][j] = 0;
 
-					data_to tmp_2 = (data_tb)(bias[idx].b) + out_buf[istride][col][j+1];
-					if(relu && (tmp_2 < 0)){
-						//tmp_2 = tmp_2/10;
-						tmp_2 = 0;
-					}
-					output[idx].b = tmp_2;
-					out_buf[istride][col][j+1] = 0;
+                    data_to tmp_2 = (data_tb)(bias[idx].b) + out_buf[istride][col][j+1];
+                    if(relu && (tmp_2 < 0)){
+                        //tmp_2 = tmp_2/10;
+                        tmp_2 = 0;
+                    }
+                    output[idx].b = tmp_2;
+                    out_buf[istride][col][j+1] = 0;
 
-					data_to tmp_3 = (data_tb)(bias[idx].c) + out_buf[istride][col][j+2];
-					if(relu && (tmp_3 < 0)){
-						//tmp_3 = tmp_3/10;
-						tmp_3 = 0;
-					}
-					output[idx].c = tmp_3;
-					out_buf[istride][col][j+2] = 0;
+                    data_to tmp_3 = (data_tb)(bias[idx].c) + out_buf[istride][col][j+2];
+                    if(relu && (tmp_3 < 0)){
+                        //tmp_3 = tmp_3/10;
+                        tmp_3 = 0;
+                    }
+                    output[idx].c = tmp_3;
+                    out_buf[istride][col][j+2] = 0;
 
-					data_to tmp_4 = (data_tb)(bias[idx].d) + out_buf[istride][col][j+3];
-					if(relu && (tmp_4 < 0)){
-						//tmp_4 = tmp_4/10;
-						tmp_4 = 0;
-					}
-					output[idx].d = tmp_4;
-					out_buf[istride][col][j+3] = 0;
+                    data_to tmp_4 = (data_tb)(bias[idx].d) + out_buf[istride][col][j+3];
+                    if(relu && (tmp_4 < 0)){
+                        //tmp_4 = tmp_4/10;
+                        tmp_4 = 0;
+                    }
+                    output[idx].d = tmp_4;
+                    out_buf[istride][col][j+3] = 0;
 
-					++idx;
-            	}
+                    ++idx;
+                }
             }
         }
     }
@@ -727,10 +727,10 @@ void naive_conv(quad_tf *input, quad_tf *bias, quad_tf *output, quad_tw *kernel)
 
 
 void wino_conv(quad_tf *input, quad_tf *bias, quad_tw *kernel, quad_tf *output,
-		int local_out_h, int local_out_w,
-		int local_in_h, int local_in_w,
-		int local_in_ch, int local_out_ch,
-		int local_k_sz, int stride, bool relu, int if_4){
+               int local_out_h, int local_out_w,
+               int local_in_h, int local_in_w,
+               int local_in_ch, int local_out_ch,
+               int local_k_sz, int stride, bool relu, int if_4){
 
     data_tf in_buf_1[buf_w][in_ch], in_buf_2[buf_w][in_ch], in_buf_3[buf_w][in_ch],
             in_buf_4[buf_w][in_ch], in_buf_5[buf_w][in_ch], in_buf_6[buf_w][in_ch],
@@ -787,9 +787,9 @@ void wino_conv(quad_tf *input, quad_tf *bias, quad_tw *kernel, quad_tf *output,
     int padded_local_out_h = local_in_h - 2;//((((local_out_h - 1)>>2)+1)<<2);
     int padded_local_out_w = local_in_w - 2;//((((local_out_w - 1)>>2)+1)<<2);
 
-	load_lines(input, in_buf_1, in_buf_2, in_buf_3, in_buf_4, 0, local_in_h, local_in_w, local_in_ch, if_4);
-	load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, 2, local_in_h, local_in_w, local_in_ch, if_4);
-	load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, 6, local_in_h, local_in_w, local_in_ch, if_4);
+    load_lines(input, in_buf_1, in_buf_2, in_buf_3, in_buf_4, 0, local_in_h, local_in_w, local_in_ch, if_4);
+    load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, 2, local_in_h, local_in_w, local_in_ch, if_4);
+    load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, 6, local_in_h, local_in_w, local_in_ch, if_4);
 
     load_kernel(kernel, k_buf, local_in_ch, local_out_ch);
 
@@ -809,96 +809,96 @@ void wino_conv(quad_tf *input, quad_tf *bias, quad_tw *kernel, quad_tf *output,
     for(;row <= local_in_h; row += 4, out_row += out_row_ii){
 //#pragma HLS LOOP_TRIPCOUNT min=20 max=20
 #pragma HLS LOOP_TRIPCOUNT min=159 max=159
-    	flag = (row - 10) / 4;
-		if (row < local_in_h){
-	        switch(flag % 6){
-	            case 0:
-	                load_lines(input, in_buf_11, in_buf_12, in_buf_1, in_buf_2, row, local_in_h, local_in_w, local_in_ch, if_4);
-	            	convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-	                store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+        flag = (row - 10) / 4;
+        if (row < local_in_h){
+            switch(flag % 6){
+                case 0:
+                    load_lines(input, in_buf_11, in_buf_12, in_buf_1, in_buf_2, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
 
-	                break;
+                    break;
 
-	            case 1:
-	                load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, row, local_in_h, local_in_w, local_in_ch, if_4);
-	            	convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-	                store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                case 1:
+                    load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
 
-	                break;
+                    break;
 
-	            case 2:
-	                load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, row, local_in_h, local_in_w, local_in_ch, if_4);
-	                convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-	                store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                case 2:
+                    load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
 
-	                break;
+                    break;
 
-	            case 3:
-	                load_lines(input, in_buf_11, in_buf_12, in_buf_1, in_buf_2, row, local_in_h, local_in_w, local_in_ch, if_4);
-	            	convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-	                store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                case 3:
+                    load_lines(input, in_buf_11, in_buf_12, in_buf_1, in_buf_2, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
 
-	                break;
+                    break;
 
-	            case 4:
-	                load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, row, local_in_h, local_in_w, local_in_ch, if_4);
-	            	convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-	                store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                case 4:
+                    load_lines(input, in_buf_3, in_buf_4, in_buf_5, in_buf_6, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf, out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
 
-	                break;
+                    break;
 
-	            default:
-					load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, row, local_in_h, local_in_w, local_in_ch, if_4);
-	            	convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-					store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-					break;
-	        }
-		}
-		else{
-		    switch(flag % 6){
-		        case 1:
-		            convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
+                default:
+                    load_lines(input, in_buf_7, in_buf_8, in_buf_9, in_buf_10, row, local_in_h, local_in_w, local_in_ch, if_4);
+                    convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf, out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
+            }
+        }
+        else{
+            switch(flag % 6){
+                case 1:
+                    convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
 
-		        case 2:
-		            convolver(in_buf_1,in_buf_2,in_buf_3, in_buf_4,in_buf_5,in_buf_6, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
+                case 2:
+                    convolver(in_buf_1,in_buf_2,in_buf_3, in_buf_4,in_buf_5,in_buf_6, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
 
-		        case 3:
-		            convolver(in_buf_5,in_buf_6,in_buf_7, in_buf_8,in_buf_9,in_buf_10, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
+                case 3:
+                    convolver(in_buf_5,in_buf_6,in_buf_7, in_buf_8,in_buf_9,in_buf_10, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
 
-		        case 4:
-		            convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
+                case 4:
+                    convolver(in_buf_9,in_buf_10,in_buf_11,in_buf_12,in_buf_1,in_buf_2, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
 
-		        case 5:
-		            convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
+                case 5:
+                    convolver(in_buf_1,in_buf_2,in_buf_3,in_buf_4,in_buf_5,in_buf_6, k_buf,  out_buf_1, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_2, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_1, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
 
-		        default:
-		            convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
-		            store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
-		            break;
-		    }
-		}
+                default:
+                    convolver(in_buf_5,in_buf_6,in_buf_7,in_buf_8,in_buf_9,in_buf_10, k_buf,  out_buf_2, padded_local_out_w, max_m, max_n, local_k_sz,stride);
+                    store_output(out_buf_1, output, bias, out_row, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    store_output(out_buf_2, output, bias, out_row + out_row_ii, local_out_h, local_out_w, local_out_ch, stride, relu);
+                    break;
+            }
+        }
     }
 }
 
 
 
-void padding(quad_tf* input, int h, int w, int ch, quad_tf* padded_input, int left, int right, int blow){
+void padding(quad_tf* input, int h, int w, int ch, quad_tf* padded_input, int left, int right, int blow, int if_4){
 
     quad_tf zero;
     zero.a = zero.b = zero.c = zero.d = 0;
@@ -906,13 +906,13 @@ void padding(quad_tf* input, int h, int w, int ch, quad_tf* padded_input, int le
     int row_sz = (w + left + right) * ch;
     int in_row_sz = w * ch;
 
-   // cout<<"in padding"<<endl;
+    // cout<<"in padding"<<endl;
 
     for( ; cnt < left * row_sz; ++cnt){
 #pragma HLS PIPELINE
         padded_input[cnt] = zero;
     }
-	//cout<<"after first line"<<endl;
+    //cout<<"after first line"<<endl;
 
     for(int in_off = 0 ; cnt < (left + h) * row_sz; cnt += row_sz, in_off += in_row_sz ){
 //		int pad_w_off = local_pad * local_pad * base_in_ch;
@@ -922,18 +922,29 @@ void padding(quad_tf* input, int h, int w, int ch, quad_tf* padded_input, int le
                 padded_input[cnt + local_cnt] = zero;
         for(int input_cnt = 0; input_cnt < in_row_sz; ++input_cnt){
 #pragma HLS PIPELINE
-            padded_input[cnt + local_cnt + input_cnt] = input[ in_off + input_cnt];
+            quad_tf tmp1;
+            if (if_4){
+                quad_layer_1_type tmp = ((quad_layer_1_type *)input)[ in_off + input_cnt];
+                tmp1.a = tmp.a * tmp_64_par - mean_b;
+                tmp1.b = tmp.b * tmp_64_par - mean_g;
+                tmp1.c = tmp.c * tmp_64_par - mean_r;
+                tmp1.d = tmp.d * tmp_64_par - 0;
+            }
+            else{
+                tmp1 = input[ in_off + input_cnt];
+            }
+            padded_input[cnt + local_cnt + input_cnt] = tmp1;
         }
         for( ; local_cnt < (left + right) * ch; ++local_cnt)
 #pragma HLS PIPELINE
                 padded_input[cnt + in_row_sz + local_cnt] = zero;
     }
-	//cout<<"after middle"<<endl;
+    //cout<<"after middle"<<endl;
     for(int local_cnt = 0; local_cnt < blow * row_sz; ++local_cnt){
 #pragma HLS PIPELINE
         padded_input[cnt + local_cnt] = zero;
     }
-	//cout<<"after last line"<<endl;
+    //cout<<"after last line"<<endl;
 }
 
 
@@ -950,14 +961,14 @@ void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_h*out_
 
 #pragma HLS DATAFLOW
 
-     quad_tf padded_input[ buf_h * buf_w * (in_ch >> 2)];
-     #pragma HLS STREAM variable=padded_input depth=2048
-//    quad_tf* padded_input = (quad_tf*)malloc(buf_h*buf_w*in_ch/4*sizeof(quad_tf));
-	//if(padded_input==NULL){
-	//	cout<<"malloc padded failed"<<endl;
-	//}
+ //   quad_tf padded_input[ buf_h * buf_w * (in_ch >> 2)];
+//#pragma HLS STREAM variable=padded_input depth=2048
+    quad_tf* padded_input = (quad_tf*)malloc(buf_h*buf_w*in_ch/4*sizeof(quad_tf));
+    //if(padded_input==NULL){
+    //	cout<<"malloc padded failed"<<endl;
+    //}
 
-	//quad_tf padded_input[ buf_h * buf_w * in_ch / 4];
+    //quad_tf padded_input[ buf_h * buf_w * in_ch / 4];
     int stride_h = local_out_h * stride;
     int stride_w = local_out_w * stride;
 
@@ -973,8 +984,8 @@ void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_h*out_
     int right = padded_local_in_w - local_in_w - left;
     int blow = padded_local_in_h - local_in_h - left;
 
-    padding(input,  local_in_h,  local_in_w, local_in_ch >> 2, padded_input, left, right, blow);
+    padding(input,  local_in_h,  local_in_w, local_in_ch >> 2, padded_input, left, right, blow,if_4);
 
     wino_conv(padded_input, bias, kernel, output, local_out_h, local_out_w, padded_local_in_h, padded_local_in_w, local_in_ch, local_out_ch, local_k_sz, stride, R, if_4);
-//    free(padded_input);
+    free(padded_input);
 }
