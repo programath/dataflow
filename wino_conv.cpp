@@ -495,65 +495,20 @@ void load_lines(quad_tf *input, data_tf in_buf_1[buf_w][in_ch], data_tf in_buf_2
         num_bound = 2;
     else
         num_bound = 4;
-    if(!if_4){
-        for (int num = 0; num < num_bound; num++){
-            for(int i = 0; (i < local_i_w) && (flag); ++i){
-                //#pragma HLS LOOP_TRIPCOUNT min=112 max=112
+    for (int num = 0; num < num_bound; num++){
+        for(int i = 0; (i < local_i_w) && (flag); ++i){
+            //#pragma HLS LOOP_TRIPCOUNT min=112 max=112
 #pragma HLS LOOP_TRIPCOUNT min=246 max=246
-                for(int j = 0; j < local_in_ch; j+=4){
+            for(int j = 0; j < local_in_ch; j+=4){
 #pragma HLS LOOP_TRIPCOUNT min=16 max=16
 #pragma HLS PIPELINE
-                    //if ((!if_4) && j > 0) break;
-                    //quad_tf tmp = input[(r_off * row_sz + i * local_in_ch + j) / 4];
-                    quad_tf tmp = input[idx];
-                    switch (num){
-                        case 0:
-                            in_buf_1[i][j] = tmp.a;
-                            in_buf_1[i][j+1] = tmp.b;
-                            in_buf_1[i][j+2] = tmp.c;
-                            in_buf_1[i][j+3] = tmp.d;
-                            break;
-                        case 1:
-                            in_buf_2[i][j] = tmp.a;
-                            in_buf_2[i][j+1] = tmp.b;
-                            in_buf_2[i][j+2] = tmp.c;
-                            in_buf_2[i][j+3] = tmp.d;
-                            break;
-                        case 2:
-                            in_buf_3[i][j] = tmp.a;
-                            in_buf_3[i][j+1] = tmp.b;
-                            in_buf_3[i][j+2] = tmp.c;
-                            in_buf_3[i][j+3] = tmp.d;
-                            break;
-                        case 3:
-                            in_buf_4[i][j] = tmp.a;
-                            in_buf_4[i][j+1] = tmp.b;
-                            in_buf_4[i][j+2] = tmp.c;
-                            in_buf_4[i][j+3] = tmp.d;
-                            break;
-                        default:
-                            break;
-                    }
-                    idx++;
-                }
-            }
-        }
-    }
-    else{
-        for (int num = 0; num < num_bound; num++){
-            for(int i = 0; (i < local_i_w) && flag; ++i){
-                //#pragma HLS LOOP_TRIPCOUNT min=112 max=112
-#pragma HLS LOOP_TRIPCOUNT min=486 max=486
-                //for(int j = 0; j < 4; j+=4){
-                //#pragma HLS LOOP_TRIPCOUNT min=16 max=16
-#pragma HLS PIPELINE
-                int j = 0;
+                //if ((!if_4) && j > 0) break;
+                //quad_tf tmp = input[(r_off * row_sz + i * local_in_ch + j) / 4];
                 quad_tf tmp = input[idx];
-                //quad_layer_1_type tmp = ((quad_layer_1_type *)input)[idx];
                 switch (num){
                     case 0:
                         in_buf_1[i][j] = tmp.a;
-                        in_buf_1[i][j+1] = tmp.b ;
+                        in_buf_1[i][j+1] = tmp.b;
                         in_buf_1[i][j+2] = tmp.c;
                         in_buf_1[i][j+3] = tmp.d;
                         break;
