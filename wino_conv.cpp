@@ -916,9 +916,9 @@ void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_h*out_
 
 #pragma HLS DATAFLOW
 
- //   quad_tf padded_input[ buf_h * buf_w * (in_ch >> 2)];
-//#pragma HLS STREAM variable=padded_input depth=2048
-    quad_tf* padded_input = (quad_tf*)malloc(buf_h*buf_w*in_ch/4*sizeof(quad_tf));
+    quad_tf padded_input[ buf_h * buf_w * (in_ch >> 2)];
+#pragma HLS STREAM variable=padded_input depth=2048
+//    quad_tf* padded_input = (quad_tf*)malloc(buf_h*buf_w*in_ch/4*sizeof(quad_tf));
     //if(padded_input==NULL){
     //	cout<<"malloc padded failed"<<endl;
     //}
@@ -942,5 +942,5 @@ void wino_conv_wrapper(quad_tf input[in_h*in_w*in_ch/4], quad_tf bias[out_h*out_
     padding(input,  local_in_h,  local_in_w, local_in_ch >> 2, padded_input, left, right, blow,if_4);
 
     wino_conv(padded_input, bias, kernel, output, local_out_h, local_out_w, padded_local_in_h, padded_local_in_w, local_in_ch, local_out_ch, local_k_sz, stride, R, if_4);
-    free(padded_input);
+//    free(padded_input);
 }
